@@ -4,7 +4,9 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Build;
@@ -19,15 +21,25 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
+import zzg.klinechart.mycandle.entry.HistoryPrice;
+
 /**
  * author by chenji on 2019/3/15
  */
 public class MyCandle extends RecyclerView {
     public Paint  mPaint;         //矩形画笔
-    public Paint  linePaint;         //矩形画笔
+    public Paint  linePaint;         //线画笔
+    public Paint   textPaint;
     public RectF  candleRectF;   //k线图的矩形图
     public RectF  volumeRectF;   //成交量的矩形图
     private float contentMinOffset;
+    private Path  mPath1;      //运动路径
+    private Path  mPath2;      //运动路径
+    public  HistoryPrice   historyPrice;   //历史最高 和历史最低
+    public  Paint  redKPaint;  //红色k线画笔
+    public  Paint  greenKPaint;  //绿色k线画笔
+
+
     int screenWidth;
     int screenhight;
 
@@ -78,12 +90,50 @@ public class MyCandle extends RecyclerView {
          //    canvas.drawCircle(220,220,50,mPaint);
                canvas.drawRect(candleRectF,mPaint); //k线图的矩形框
                canvas.drawRect(volumeRectF,mPaint); //成交量的矩形框
-               canvas.drawLine(candleRectF.left,candleRectF.top+(candleRectF.bottom-candleRectF.top)/3,candleRectF.right,candleRectF.top+(candleRectF.bottom-candleRectF.top)/3,linePaint);
-               canvas.drawLine(candleRectF.left,candleRectF.top+(candleRectF.bottom-candleRectF.top)*2/3,candleRectF.right,candleRectF.top+(candleRectF.bottom-candleRectF.top)*2/3,linePaint);
+
+            //   canvas.drawLine(candleRectF.left,candleRectF.top+(candleRectF.bottom-candleRectF.top)/3,candleRectF.right,candleRectF.top+(candleRectF.bottom-candleRectF.top)/3,linePaint);
+             //  canvas.drawLine(candleRectF.left,candleRectF.top+(candleRectF.bottom-candleRectF.top)*2/3,candleRectF.right,candleRectF.top+(candleRectF.bottom-candleRectF.top)*2/3,linePaint);
+               canvas.drawText(String.valueOf(historyPrice.getTopPrice()),candleRectF.left-65,candleRectF.top-5,textPaint); //坐标图最高点
+               canvas.drawText(String.valueOf((historyPrice.getTopPrice()-historyPrice.getBottomPrice())/2+historyPrice.getBottomPrice()),candleRectF.left-65,candleRectF.top+(candleRectF.bottom-candleRectF.top)/3+5,textPaint); //坐标图第二高点
+               canvas.drawText(String.valueOf((historyPrice.getTopPrice()-historyPrice.getBottomPrice())/4+historyPrice.getBottomPrice()),candleRectF.left-65,candleRectF.top+(candleRectF.bottom-candleRectF.top)*2/3+5,textPaint); //坐标图第三高点
+               canvas.drawText(String.valueOf(historyPrice.getBottomPrice()),candleRectF.left-65,candleRectF.bottom+10,textPaint); //坐标图最低点
+
+
+
+// 绘制虚线开始，
+DashPathEffect dashPathEffect1 = new DashPathEffect(new float[]{10, 10}, 0); //数组第一个参数长度实线的长度，数组第二个参数虚线空间的长度
+mPaint.setPathEffect(dashPathEffect1);
+mPath1.reset();
+mPath1.moveTo(candleRectF.left, candleRectF.top+(candleRectF.bottom-candleRectF.top)/3);  //虚线的起点
+mPath1.lineTo(candleRectF.right, candleRectF.top+(candleRectF.bottom-candleRectF.top)/3); //虚线的终点
+canvas.drawPath(mPath1, mPaint);
+
+ mPath2.reset();
+ mPath2.moveTo(candleRectF.left, candleRectF.top+(candleRectF.bottom-candleRectF.top)*2/3);  //虚线的起点
+ mPath2.lineTo(candleRectF.right, candleRectF.top+(candleRectF.bottom-candleRectF.top)*2/3); //虚线的终点
+ canvas.drawPath(mPath2, mPaint);
+ //绘制虚线结束
+
+        //从这里开始绘制k线,先画第一根k线
+        //要定义k线的宽和高
+        //还有k线的位置
+
+
+
+
+
+
+
+
+
+
     }
 
     //实例化布局
     protected  void init(Context context){
+        historyPrice=new HistoryPrice(3100,2900);    //历史价格
+
+
         candleRectF=new RectF();
         volumeRectF=new RectF();
         mPaint=new Paint();
@@ -98,6 +148,33 @@ public class MyCandle extends RecyclerView {
         mPaint.setStrokeWidth(1);
 
 
+
+        //画笔的属性
+        textPaint=new Paint();
+        textPaint.setStyle(Paint.Style.STROKE);
+        textPaint.setColor(Color.RED);
+        textPaint.setStrokeWidth(1);
+        textPaint.setTextSize(20);
+
+
+        //红色k线画笔
+        redKPaint=new Paint();
+        redKPaint.setStyle(Paint.Style.STROKE);
+        redKPaint.setColor(Color.RED);
+        redKPaint.setStrokeWidth(1);
+        redKPaint.setTextSize(20);
+
+
+        //绿色k线画笔  start
+        greenKPaint=new Paint();
+        greenKPaint.setStyle(Paint.Style.STROKE);
+        greenKPaint.setColor(Color.GREEN);
+        greenKPaint.setStrokeWidth(1);
+        greenKPaint.setTextSize(20);
+        //end
+
+
+
         contentMinOffset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, context.getResources().getDisplayMetrics());
         screenWidth=getScreenWidth();
         screenhight=getScreenHight();  //屏幕的高度
@@ -105,6 +182,8 @@ public class MyCandle extends RecyclerView {
         volumeRectF.set(screenWidth/8,screenhight*4/10+20,screenWidth*7/8,screenhight*1/2);
 
 
+        mPath1=new Path();
+        mPath2=new Path();
 
         Log.i("width:",String.valueOf(screenWidth));
         Log.i("height:",String.valueOf(screenhight));
@@ -115,6 +194,7 @@ public class MyCandle extends RecyclerView {
     public boolean onTouchEvent(MotionEvent event) {
         return super.onTouchEvent(event);
     }
+
 
     /**
      * 得到屏幕宽度
