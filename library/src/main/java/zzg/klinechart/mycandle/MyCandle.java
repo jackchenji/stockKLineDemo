@@ -10,6 +10,7 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Build;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -20,7 +21,12 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 
+import java.util.List;
+
+import zzg.klinechart.internal.EntryData;
+import zzg.klinechart.mycandle.entry.CandleEntry;
 import zzg.klinechart.mycandle.entry.HistoryPrice;
 
 /**
@@ -39,9 +45,20 @@ public class MyCandle extends RecyclerView {
     public  Paint  redKPaint;  //红色k线画笔
     public  Paint  greenKPaint;  //绿色k线画笔
 
-
     int screenWidth;
     int screenhight;
+
+
+    int kWidth=100;   //定义k线的宽度为100个像素
+
+
+    public  List<CandleEntry>  data;   //k线数据
+
+
+
+    public   void   setData(List<CandleEntry> data){    //设置数据
+        this.data=data;
+    }
 
 
     public MyCandle(Context context) {
@@ -117,12 +134,6 @@ canvas.drawPath(mPath1, mPaint);
         //从这里开始绘制k线,先画第一根k线
         //要定义k线的宽和高
         //还有k线的位置
-
-
-
-
-
-
 
 
 
@@ -219,5 +230,7 @@ canvas.drawPath(mPath1, mPaint);
         windowManager.getDefaultDisplay().getMetrics(displayMetrics);
         return displayMetrics.heightPixels;
     }
+
+
 
 }

@@ -11,11 +11,11 @@ public class CandleEntry {
     public   int    volume;   //成交量
     public   int    volumeMoney;  //成交价
     public   String date;      //成交日期
-    public   String xValue;   //平均价
+    public   float xValue;   //平均价
     public   Boolean isRise;  //是否升降
 
 
-    public CandleEntry(float high, float low, float open, float close, int volume, int volumeMoney, String date, String xValue,Boolean isRise) {
+    public CandleEntry(float high, float low, float open, float close, int volume, int volumeMoney, String date, float xValue) {
         this.high = high;
         this.low = low;
         this.open = open;
@@ -24,6 +24,5 @@ public class CandleEntry {
         this.volumeMoney = volumeMoney;
         this.date = date;
         this.xValue = xValue;
-        this.isRise = isRise;
     }
 }

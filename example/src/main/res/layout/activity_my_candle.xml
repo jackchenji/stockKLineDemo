@@ -9,6 +9,7 @@
     >
 
     <zzg.klinechart.mycandle.MyCandle
+        android:id="@+id/mycandle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
