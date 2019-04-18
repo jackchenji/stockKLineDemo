@@ -25,4 +25,83 @@ public class CandleEntry {
         this.date = date;
         this.xValue = xValue;
     }
+
+    public float getHigh() {
+        return high;
+    }
+
+    public void setHigh(float high) {
+        this.high = high;
+    }
+
+    public float getLow() {
+        return low;
+    }
+
+    public void setLow(float low) {
+        this.low = low;
+    }
+
+    public float getOpen() {
+        return open;
+    }
+
+    public void setOpen(float open) {
+        this.open = open;
+    }
+
+    public float getClose() {
+        return close;
+    }
+
+    public void setClose(float close) {
+        this.close = close;
+    }
+
+    public int getVolume() {
+        return volume;
+    }
+
+    public void setVolume(int volume) {
+        this.volume = volume;
+    }
+
+    public int getVolumeMoney() {
+        return volumeMoney;
+    }
+
+    public void setVolumeMoney(int volumeMoney) {
+        this.volumeMoney = volumeMoney;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public float getxValue() {
+        return xValue;
+    }
+
+    public void setxValue(float xValue) {
+        this.xValue = xValue;
+    }
+
+    public Boolean getRise() {
+        return isRise;
+    }
+
+    public void setRise(Boolean rise) {
+        isRise = rise;
+    }
+
+
+
+
+
+
+
 }
