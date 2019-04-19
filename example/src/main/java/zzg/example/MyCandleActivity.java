@@ -24,9 +24,9 @@ public class MyCandleActivity extends AppCompatActivity {
         myCandle= (MyCandle) findViewById(R.id.mycandle);
         entryData=new ArrayList<>();
         entryData.add(new CandleEntry(3050,2980,3000,3020,4020,4030,"2019-4-2",3010));
-    //    entryData.add(new CandleEntry(3000,2950,3000,2950,4020,4030,"2019-4-2",3010));
+        entryData.add(new CandleEntry(3080,2950,2960,3000,4020,4030,"2019-4-2",3010));
+        entryData.add(new CandleEntry(3080,2950,3000,2960,4020,4030,"2019-4-2",3010));
         myCandle.setData(entryData);
     }
-
 
 }

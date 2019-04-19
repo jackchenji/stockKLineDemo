@@ -107,7 +107,7 @@ public class Renderer {
     // CALC
     calc();
     // DRAW GRIDS
- //   renderGrid(canvas);
+    renderGrid(canvas);
     // DRAW LABELS
     renderLabels(canvas);
 
