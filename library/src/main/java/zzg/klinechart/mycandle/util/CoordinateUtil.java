@@ -16,12 +16,12 @@ public class CoordinateUtil {
     }
 
     //获取k线矩形位置的位置坐标
-    public static RectF getRectf(HistoryPrice historyPrice, CandleEntry candleEntry, RectF baseRecf) {
+    public static RectF getRectf(HistoryPrice historyPrice, CandleEntry candleEntry, RectF baseRecf,int i) {
         Float left;
         Float right;
         Float top;
         Float bottom;
-        left = getMaxPrice(candleEntry.getOpen(),candleEntry.getClose()) / historyPrice.getTopPrice() * baseRecf.left + 10;
+        left = i*(baseRecf.right-baseRecf.left)/30+getMaxPrice(candleEntry.getOpen(),candleEntry.getClose()) / historyPrice.getTopPrice() * baseRecf.left +(i+1)*10;
         right = left + (baseRecf.right-baseRecf.left)/30;
         top = (historyPrice.getTopPrice() / getMaxPrice(candleEntry.getOpen(),candleEntry.getClose())) * baseRecf.top;
         bottom =  (historyPrice.getBottomPrice() / getMinPrice(candleEntry.getOpen(),candleEntry.getClose())) * baseRecf.bottom;
@@ -32,13 +32,13 @@ public class CoordinateUtil {
 
 
     //获取k线数组最高点，最低点坐标
-    public static float[] getkine(HistoryPrice historyPrice, CandleEntry candleEntry, RectF baseRecf) {
+    public static float[] getkine(HistoryPrice historyPrice, CandleEntry candleEntry, RectF baseRecf,int i) {
         float[] kLine=new float[4];
         Float left;
         Float right;
         Float top;
         Float bottom;
-        left = getMaxPrice(candleEntry.getOpen(),candleEntry.getClose()) / historyPrice.getTopPrice() * baseRecf.left + 10;
+        left = i*(baseRecf.right-baseRecf.left)/30+getMaxPrice(candleEntry.getOpen(),candleEntry.getClose()) / historyPrice.getTopPrice() * baseRecf.left +(i+1)*10;
         right = left + (baseRecf.right-baseRecf.left)/30;
         top = (historyPrice.getTopPrice() /candleEntry.getHigh()) * baseRecf.top;
         bottom =  (historyPrice.getBottomPrice() / candleEntry.getLow()) * baseRecf.bottom;

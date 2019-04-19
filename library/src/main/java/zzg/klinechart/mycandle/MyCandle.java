@@ -46,7 +46,7 @@ public class MyCandle extends RecyclerView {
     public  HistoryPrice   historyPrice;   //历史最高 和历史最低
     public  Paint  redKPaint;  //红色k线画笔
     public  Paint  greenKPaint;  //绿色k线画笔
-
+    public  RectF  lastRectf;//上一个矩形框
 
     int screenWidth;
     int screenhight;
@@ -150,10 +150,14 @@ canvas.drawPath(mPath1, mPaint);
 
         for(int i=0;i<data.size();i++){
             //canvas.drawRect(,redKPaint);
-            RectF rectF=CoordinateUtil.getRectf(historyPrice,data.get(i),candleRectF);
-            float[] kLine=CoordinateUtil.getkine(historyPrice,data.get(i),candleRectF);
+            RectF rectF=CoordinateUtil.getRectf(historyPrice,data.get(i),candleRectF,i);
+            float[] kLine=CoordinateUtil.getkine(historyPrice,data.get(i),candleRectF,i);
+            if(data.get(i).getOpen()<data.get(i).getClose()){
             canvas.drawRect(rectF,redKPaint);
-            canvas.drawLines(kLine,redKPaint);
+            canvas.drawLines(kLine,redKPaint);}else{
+                canvas.drawRect(rectF,greenKPaint);
+                canvas.drawLines(kLine,greenKPaint);
+            }
         }
 
 
@@ -220,6 +224,7 @@ canvas.drawPath(mPath1, mPaint);
 
         Log.i("width:",String.valueOf(screenWidth));
         Log.i("height:",String.valueOf(screenhight));
+        lastRectf=candleRectF;
     }
 
 
