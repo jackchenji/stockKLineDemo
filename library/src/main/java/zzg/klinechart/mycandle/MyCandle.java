@@ -23,9 +23,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-
 import java.util.List;
-
 import zzg.klinechart.internal.EntryData;
 import zzg.klinechart.mycandle.entry.CandleEntry;
 import zzg.klinechart.mycandle.entry.HistoryPrice;
@@ -60,7 +58,6 @@ public class MyCandle extends RecyclerView {
     public MyCandle(Context context) {
         super(context);
         init(context);
-
     }
 
 
@@ -82,8 +79,6 @@ public class MyCandle extends RecyclerView {
 
     //通知它数据改变了
     public  void notifyDataChanged(Boolean isInvalid){
-
-
     }
 
 
@@ -119,13 +114,16 @@ public class MyCandle extends RecyclerView {
                canvas.drawRect(candleRectF,mPaint); //k线图的矩形框
                canvas.drawRect(volumeRectF,mPaint); //成交量的矩形框
 
-            //canvas.drawLine(candleRectF.left,candleRectF.top+(candleRectF.bottom-candleRectF.top)/3,candleRectF.right,candleRectF.top+(candleRectF.bottom-candleRectF.top)/3,linePaint);
+              //canvas.drawLine(candleRectF.left,candleRectF.top+(candleRectF.bottom-candleRectF.top)/3,candleRectF.right,candleRectF.top+(candleRectF.bottom-candleRectF.top)/3,linePaint);
              //canvas.drawLine(candleRectF.left,candleRectF.top+(candleRectF.bottom-candleRectF.top)*2/3,candleRectF.right,candleRectF.top+(candleRectF.bottom-candleRectF.top)*2/3,linePaint);
-               canvas.drawText(String.valueOf(historyPrice.getTopPrice()),candleRectF.left-65,candleRectF.top-5,textPaint); //坐标图最高点
-               canvas.drawText(String.valueOf((historyPrice.getTopPrice()-historyPrice.getBottomPrice())/2+historyPrice.getBottomPrice()),candleRectF.left-65,candleRectF.top+(candleRectF.bottom-candleRectF.top)/3+5,textPaint); //坐标图第二高点
-               canvas.drawText(String.valueOf((historyPrice.getTopPrice()-historyPrice.getBottomPrice())/4+historyPrice.getBottomPrice()),candleRectF.left-65,candleRectF.top+(candleRectF.bottom-candleRectF.top)*2/3+5,textPaint); //坐标图第三高点
-               canvas.drawText(String.valueOf(historyPrice.getBottomPrice()),candleRectF.left-65,candleRectF.bottom+10,textPaint); //坐标图最低点
+               canvas.drawText(String.valueOf(historyPrice.getTopPrice()),candleRectF.left-75,candleRectF.top-5,textPaint); //背景矩形最高点
+               canvas.drawText(String.valueOf((historyPrice.getTopPrice()-historyPrice.getBottomPrice())/2+historyPrice.getBottomPrice()),candleRectF.left-75,candleRectF.top+(candleRectF.bottom-candleRectF.top)/3+5,textPaint); //背景矩形第二高点
+               canvas.drawText(String.valueOf((historyPrice.getTopPrice()-historyPrice.getBottomPrice())/4+historyPrice.getBottomPrice()),candleRectF.left-75,candleRectF.top+(candleRectF.bottom-candleRectF.top)*2/3+5,textPaint); //背景矩形第三高点
+               canvas.drawText(String.valueOf(historyPrice.getBottomPrice()),candleRectF.left-75,candleRectF.bottom+10,textPaint); //背景矩形最低点
 
+
+               //画成交量最大值
+               canvas.drawText(String.valueOf(historyPrice.getMaxVolumn()),volumeRectF.left-75,volumeRectF.top+15,textPaint); //背景矩形最高点
 
 
 // 绘制虚线开始
@@ -147,25 +145,26 @@ canvas.drawPath(mPath1, mPaint);
         //还有k线的位置
 
 
-
         for(int i=0;i<data.size();i++){
             //canvas.drawRect(,redKPaint);
-            RectF rectF=CoordinateUtil.getRectf(historyPrice,data.get(i),candleRectF,i);
+            RectF kRectF=CoordinateUtil.getRectf(historyPrice,data.get(i),candleRectF,i);
+            RectF volumeRect=CoordinateUtil.getVolumeRectf(historyPrice,data.get(i),volumeRectF,i);
             float[] kLine=CoordinateUtil.getkine(historyPrice,data.get(i),candleRectF,i);
             if(data.get(i).getOpen()<data.get(i).getClose()){
-            canvas.drawRect(rectF,redKPaint);
-            canvas.drawLines(kLine,redKPaint);}else{
-                canvas.drawRect(rectF,greenKPaint);
+            canvas.drawRect(kRectF,redKPaint); //k线矩形
+            canvas.drawRect(volumeRect,redKPaint);// 成交量矩形
+            canvas.drawLines(kLine,redKPaint); //中间的那根长线
+               }else{
+                canvas.drawRect(kRectF,greenKPaint);
                 canvas.drawLines(kLine,greenKPaint);
+                canvas.drawRect(volumeRect,greenKPaint);// 成交量矩形
             }
         }
-
-
     }
 
     //实例化布局
     protected  void init(Context context){
-        historyPrice=new HistoryPrice(3100,2900);    //历史价格
+        historyPrice=new HistoryPrice(3100,2900,10000);    //历史价格
 
 
         candleRectF=new RectF();
@@ -185,7 +184,7 @@ canvas.drawPath(mPath1, mPaint);
 
         //画笔的属性
         textPaint=new Paint();
-        textPaint.setStyle(Paint.Style.STROKE);
+        textPaint.setStyle(Paint.Style.FILL);
         textPaint.setColor(Color.RED);
         textPaint.setStrokeWidth(1);
         textPaint.setTextSize(20);
@@ -212,7 +211,7 @@ canvas.drawPath(mPath1, mPaint);
         screenWidth=getScreenWidth();
         screenhight=getScreenHight();  //屏幕的高度
         candleRectF.set(screenWidth/8,screenhight*2/8,screenWidth*7/8,screenhight*4/10);
-        volumeRectF.set(screenWidth/8,screenhight*4/10+20,screenWidth*7/8,screenhight*1/2);
+        volumeRectF.set(screenWidth/8,screenhight*4/10+40,screenWidth*7/8,screenhight*1/2);
 
 
 
